@@ -1,4 +1,9 @@
-const ATTRIBUTE = "data-mattfilter-option";
+const ATTRIBUTE = "data-mattfilter";
+const ATTRIBUTE_OPTION = "data-mattfilter-option";
+
+export function isUpdated(): boolean {
+  return Boolean(getContainer().querySelector("[" + ATTRIBUTE + "]"));
+}
 
 export function addDivider() {
   const dividerReference = getContainer().querySelector(".SelectMenu-divider");
@@ -11,8 +16,9 @@ export function addDivider() {
 export function addHeader(text: string) {
   const headerReference = getContainer().querySelector(".SelectMenu-header");
 
-  const header = headerReference.cloneNode(true);
-  (header as HTMLElement).querySelector("h3").textContent = text;
+  const header = headerReference.cloneNode(true) as HTMLElement;
+  header.querySelector("h3").textContent = text;
+  header.setAttribute(ATTRIBUTE, "true");
 
   getForm().appendChild(header);
 }
@@ -30,15 +36,15 @@ export function addOption(text: string, key: string, onClick: () => void) {
   input.checked = false;
 
   input.addEventListener("change", () => onClick());
-  input.setAttribute(ATTRIBUTE, key);
+  input.setAttribute(ATTRIBUTE_OPTION, key);
 
   getForm().appendChild(label);
 }
 
 export function getSelectedOwners(): string[] {
-  return [...document.querySelectorAll("[" + ATTRIBUTE + "]")]
+  return [...document.querySelectorAll("[" + ATTRIBUTE_OPTION + "]")]
     .filter((filter) => (filter as HTMLInputElement).checked)
-    .map((filter) => filter.getAttribute(ATTRIBUTE));
+    .map((filter) => filter.getAttribute(ATTRIBUTE_OPTION));
 }
 
 function getForm() {

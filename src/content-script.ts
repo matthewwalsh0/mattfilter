@@ -3,6 +3,10 @@ import * as FileTree from "./file-tree";
 import * as FileContent from "./file-content";
 
 function updateFilterForm(onClick: () => void) {
+  if (FileFilters.isUpdated()) {
+    return;
+  }
+
   const filesByOwner = FileTree.getFilesByOwner();
 
   FileFilters.addDivider();
@@ -25,15 +29,35 @@ function filter(ownerFilters: string[]) {
   FileContent.hideFiles(hiddenPaths);
 }
 
+function isReady() {
+  const path = window.location.pathname;
+
+  return (
+    path?.includes("/pull/") && path?.includes("/files") && FileTree.isLoaded()
+  );
+}
+
 async function init() {
-  let ownerFilters: string[] = [];
+  try {
+    if (!isReady()) {
+      setTimeout(init, 1000);
+      return;
+    }
 
-  const onFilterClick = () => {
-    ownerFilters = FileFilters.getSelectedOwners();
-    filter(ownerFilters);
-  };
+    let ownerFilters: string[] = [];
 
-  updateFilterForm(onFilterClick);
+    const onFilterClick = () => {
+      ownerFilters = FileFilters.getSelectedOwners();
+      filter(ownerFilters);
+    };
+
+    setInterval(() => {
+      updateFilterForm(onFilterClick);
+    }, 1000);
+
+  } catch (e) {
+    console.error("MattFilter - Error", e);
+  }
 }
 
 init();

@@ -1,3 +1,9 @@
+export function isLoaded(): boolean {
+  return Boolean(
+    document.querySelector("[data-tree-entry-type='file'][data-codeowners]")
+  );
+}
+
 export function getFilesByOwner(): Record<string, string[]> {
   const files = getFileElements();
   const user = getUser();
