@@ -33,7 +33,9 @@ export function filterFilesByOwner(owners: string[]): string[] {
     .map((file) => {
       const path = getFilePath(file);
       const fileOwners = getFileOwners(file);
-      const isVisible = owners.every((owner) => fileOwners.includes(owner));
+
+      const isVisible =
+        owners.some((owner) => fileOwners.includes(owner)) || !owners.length;
 
       setFileVisibility(file, isVisible);
 
@@ -67,7 +69,8 @@ export function hideEmptyDirectories() {
 }
 
 function getFileOwners(file: HTMLElement): string[] {
-  return file.getAttribute("data-codeowners").split(",");
+  const owners = file.getAttribute("data-codeowners").split(",");
+  return owners.length === 1 && owners[0] === "" ? ["No Owner"] : owners;
 }
 
 function getFilePath(file: HTMLElement): string {
