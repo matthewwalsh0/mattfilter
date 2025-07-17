@@ -1,9 +1,9 @@
 {
   "name": "MattFilter",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "Filter files in GitHub pull requests according to code ownership.",
   "author": "Matthew Walsh (matthew.walsh@consensys.net)",
-  "manifest_version": 2,
+  "manifest_version": 3,
   "icons": {
     "128": "resources/icon.png"
   },
